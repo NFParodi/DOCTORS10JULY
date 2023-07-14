@@ -1,0 +1,22 @@
+.container{
+    background-color: #215a6d;;
+    
+    /* display: flex; */
+    /* justify-content: center; */
+}
+
+.imagen{
+    display: flex;
+    /* align-items: center; */
+    justify-content: center;
+    /* align-content: center; */
+}
+
+.parrafo{
+    color: #dfece6;
+    display: flex;
+    text-align: center;
+    /* align-items: center; */
+    justify-content: center;
+    /* align-content: center; */
+}

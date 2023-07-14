@@ -13,6 +13,8 @@ import { ref,getStorage,getDownloadURL} from 'firebase/storage'
 import {Search} from './search'
 import {useLocation, useNavigate,useParams} from 'react-router-dom'
 import {Singout} from './singout'
+import {Table} from './table'
+import {Noresults} from './noresults'
 import "../css/searchResult.css"
 
 export const Result = ()=>{
@@ -26,13 +28,14 @@ export const Result = ()=>{
    // const [medicosfiltrados, setmedicosfiltrados] = useState([])
    const [palabraclave,setpalabraclave] = useState([''])
    const [palabraFront,setpalabraFront] = useState([''])
+   const [resultado, setresultado] = useState(true)
    // const [pics,setpics] = useState([])  //con esto tengo que empezar a hacer la descarga
 //    const[plan,setplan] = useState('210')
    
    const doctores = collection(bd,plan)
  
    
-   const getdoctors = async()=>{
+   const getdoctors = async(sr)=>{
 
    
       const datos = await getDocs(doctores);
@@ -42,7 +45,7 @@ export const Result = ()=>{
       console.log('LOS DATOS SON:', datos.docs);
       // console.log('LAS FOTOS SOON',pics);
 
-      setpalabraclave(search.toLowerCase())
+      setpalabraclave(sr)
       setpalabraFront( palabraclave[0].toUpperCase()+palabraclave.slice(1))
 
       console.log('PALABRA CLAVE' , palabraclave);
@@ -54,17 +57,62 @@ export const Result = ()=>{
 
       )
 
+
+      
+      if(palabraclave!==[''])
+      {
+     // console.log('PALABRA CLAVE' , palabraclave);
+     setresultado(true)
+      console.log('DENTRO DE IF PALABRA CLAVE !==',palabraclave);
+        const especialidad = (medicos.filter(medico=>medico.specialty==palabraclave));
+             if(especialidad.length!==0)
+             {settodos(especialidad)
+              console.log('DENTRO DE ESPECIALIDAD NEGADO');
+              console.log('TODOS',todos,'ESPECIALIDAD', especialidad, 'PALABRA CLAVE IF',palabraclave);}
+            else{{const nombre = (medicos.filter(medico=>medico.name==palabraclave));
+                 if(nombre.length!==0){settodos(nombre);
+                    console.log('TODOS',todos,'NOMBRE', nombre)}
+                    else {const apellido = (medicos.filter(medico=>medico.lastname==palabraclave));
+                       if(apellido.length!==0){settodos(apellido);
+                          console.log('TODOS',todos,'APELLIDO', apellido)}
+                       else{const ciudad = (medicos.filter(medico=>medico.city==palabraclave))
+                          if(ciudad.length!==0){settodos(ciudad);
+                             console.log('TODOS',todos,'CIUDAD', ciudad) }
+                          else setresultado(false);
+                           console.log('NO HAY RESULTADOS');
+                           console.log('RESUTADO AL FINAL',resultado);
+                          
+                        }
+                          }}}
+
+         
+        //  ;
+        //  console.log('TODOS',todos,'IF name');
+        //  (medicos.filter(medico=>medico.lastname==palabraclave));
+        //  console.log('TODOS',todos,'IF lalstname')
+        //  (medicos.filter(medico=>medico.city==palabraclave));
+        //  console.log('TODOS',todos,'IF city')
+      //   console.log('RESULTADO AL FINAL',resultado)
+     }
+
+       else navigate('/doctors')   
+
+
+
+
+
+
          // console.log('MEDICOS', medicos);
          //ACA filtro los medicos por especialidad
          // palabraclave != '' ?(setmedicos(( medicos.filter(medico=>medico.specialty==search))))  
           
-          if(palabraclave!==''){settodos(( medicos.filter(medico=>medico.specialty==palabraclave)))}
-           else navigate('/doctors')
-         console.log('PALABRA', palabraclave)
+         //  if(palabraclave!==''){settodos(( medicos.filter(medico=>medico.specialty==palabraclave)))}
+         //   else navigate('/doctors')
+         // console.log('PALABRA', palabraclave)
       //aca tengo que bajar las fotos
          // setpics(download(),{pics:pics.name}) 
       
-
+        
 }
 
 // const download = async() =>{
@@ -74,7 +122,7 @@ export const Result = ()=>{
 //       }
 
 useEffect(
-   ()=>{getdoctors()},[palabraclave]
+   ()=>{getdoctors(search)},[palabraclave]
 )
 
 
@@ -168,49 +216,8 @@ return(
       
          {/* <table><tr><Link to={'/doctors/create'}><tr>Crear prestador</tr></Link></tr></table> */}
 
-
-         <div class="container">
-  <div class="row">
-    <div class="col">
-      
-      <table className='table table-hover'  >
-            
-            <thead >
-            <tr>
-                        
-                        <th className='datos'> Nombre</th>
-                        <th className='datos'> Apellido</th>
-                        <th className='datos'> Especialidad </th>
-                        <th className='datos'colSpan={3}> Dirección</th>
-                        <th className='datos' colSpan={3}>  </th>
-                     </tr>
-               </thead> 
-               <tbody>    
-                  
-            
-            {todos.map((medico)=>
-            <tr key={medico.id}>
-            <td className='datos'>{(medico.name)[0].toUpperCase()+(medico.name).slice(1)}</td>
-            <td className='datos'>{(medico.lastname)[0].toUpperCase()+(medico.lastname).slice(1)}</td>
-            <td className='datos'>{(medico.specialty)[0].toUpperCase()+(medico.specialty).slice(1)}</td>
-               
-               <td className='datos'>{(medico.street)[0].toUpperCase()+(medico.street).slice(1)}</td>
-               <td className='datos'>{medico.number}</td>
-               <td className='datos'>{(medico.city)[0].toUpperCase()+(medico.city).slice(1)}</td>
-            
-            <td><div className='divPerfil' ><img className='imgPerfil' src={medico.url} alt="imagen_perfil" /></div></td>{/*<td>{medico.address.street} {medico.address.number } {medico.address.city }</td>*/} 
-         
-         
-      </tr> )}
-            {/*  <td><img src={pic.url} alt="imagen_perfil" /></td> */}
-            {/* porque si no agrego el () de los argumentos de la funcion, la misma se ejecuta de una? */}
-            
-            </tbody>
-         </table>
-    </div>
-    
-  </div>
-</div>
+         {resultado?<Table medicos = {todos}/>:<Noresults/>} 
+            {/* <Table medicos={todos}/> */}
 
 
         

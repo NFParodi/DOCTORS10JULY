@@ -133,12 +133,12 @@ const erasealert=(id)=>{
 
 return(
    <div className="prestador">
-      <Singout/>
+      
       <div>
       <h3>Gestionador de Prestadores</h3>
-         <table><tr><Link to={'/doctors/create'}><tr ><button className="btn registro">Crear prestador</button></tr></Link></tr></table>
+         
          <div>
-         <h4>Por favor ingrese el plan donde pertenece su prestador: </h4>
+         <h4>Por favor ingrese el plan donde visualizar prestadores: </h4>
             <select className="btn" onChange={(e)=>setplan(e.target.value)}>
                <option value="210">210</option>
                <option value="310">310</option>
@@ -212,7 +212,8 @@ return(
     
     
       </div>
-         
+      <table><tr><Link to={'/doctors/create'}><button  style={{marginRight:40}} className="btn registro">Crear prestador</button></Link><td><Singout/></td></tr></table>
+      
       </div>
     
     

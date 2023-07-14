@@ -76,7 +76,8 @@ return(
     <form onSubmit={createdoctor}>
 
 <div>
-        <label className="prestacion">Elija en que plan agregar prestador:</label>
+        <h3>Agregar prestadotres</h3>
+        <label className="prestacion">Elija en que plan donde agregar prestador:</label>
         <select className="btn" onChange={(e)=>setplan(e.target.value)}>
             <option value="210">210</option>
             <option value="310">310</option>

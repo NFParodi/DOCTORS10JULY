@@ -40,11 +40,13 @@ export const Search = ()=>{
     //extraccion de parametro de URL
 
    
+   
 
 
     const handle = (e)=>{
             e.preventDefault();
-            if(palabrabusqueda==''){
+            const minusculas = palabrabusqueda.toLocaleLowerCase()
+            if(minusculas==''){
                 navigate(`/doctors/display/${plan}`)
                 // switch (plan) {
                 //     case 'doctors':
@@ -62,7 +64,7 @@ export const Search = ()=>{
 
             }
             
-            else{navigate(`/doctors/searchresult/${plan}/?search=${palabrabusqueda}`)}
+            else{navigate(`/doctors/searchresult/${plan}/?search=${minusculas}`)}
             
         
     }
